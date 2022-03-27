@@ -10,6 +10,55 @@
       integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
       crossorigin="anonymous"
     ></script>
+    <script>
+        $(document).ready(function () {
+        view_up();
+        });
+
+        function view_up() {
+            $.ajax({
+                type: "GET",
+                url: "/api/post/${postId}",
+                data: {},
+                success: function (response) {
+                    console.log(response)
+                    let rows = response['post']
+                    for(let i=rows.length-1; i >=0 ; i--) {
+                        let title = rows[i]['title']
+                        let writer = rows[i]['writer']
+                        let date = rows[i]['date']
+                        let postId = rows[i]['postId']
+                        let description = rows[i]['description']
+
+                        let temp_html = `<div class="board_view">
+                                            <div class="title">
+                                                ${title}
+                                            </div>
+                                            <div class="info">
+                                                <dl>
+                                                    <dt>글쓴이</dt>
+                                                    <dd class="writer">${writer}</dd>
+                                                </dl>
+                                                <dl>
+                                                    <dt>작성일</dt>
+                                                    <dd class="date">${date}</dd>
+                                                </dl>
+                                            </div>
+                                            <div class="cont">
+                                                ${description}<br class="description">
+                                            </div>
+                                        </div>`
+                                        
+                        $('#view-box').append(temp_html);               
+                        
+                    }
+                },
+            error: function (error) {
+                customAlert(error.responseJSON.errorMessage);
+            },
+            });
+        }
+    </script>
 </head>
 <body>
     <div class="board_wrap">
@@ -17,38 +66,23 @@
             <strong>공지사항</strong>
             <p>공지사항을 빠르고 정확하게 안내해드립니다.</p>
         </div>
-        <div class="board_view_wrap">
+        <div class="board_view_wrap" id="view-box">
             <div class="board_view">
                 <div class="title">
                     글 제목이 들어갑니다.
                 </div>
                 <div class="info">
                     <dl>
-                        <dt>번호</dt>
-                        <dd>1</dd>
-                    </dl>
-                    <dl>
                         <dt>글쓴이</dt>
-                        <dd>김이름</dd>
+                        <dd class="writer">김이름</dd>
                     </dl>
                     <dl>
                         <dt>작성일</dt>
-                        <dd>2021.1.16</dd>
-                    </dl>
-                    <dl>
-                        <dt>조회</dt>
-                        <dd>33</dd>
+                        <dd class="date">2021.1.16</dd>
                     </dl>
                 </div>
                 <div class="cont">
-                    글 내용이 들어갑니다<br>
-                    글 내용이 들어갑니다<br>
-                    글 내용이 들어갑니다<br>
-                    글 내용이 들어갑니다<br>
-                    글 내용이 들어갑니다<br>
-                    글 내용이 들어갑니다<br>
-                    글 내용이 들어갑니다<br>
-                    글 내용이 들어갑니다
+                    글 내용이 들어갑니다<br class="description">
                 </div>
             </div>
             <div class="bt_wrap">

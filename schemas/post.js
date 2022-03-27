@@ -19,6 +19,7 @@ const postSchema = mongoose.Schema({
   postId: {
     type: Number,
     unique: true,
+    required: true,
   }
 });
 
