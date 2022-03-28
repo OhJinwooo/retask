@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>blog login page</title>
+    <style>
+        .login {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .btn {
+            margin-top: 20px;
+
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+        }
+        .btn > button {
+            margin-right: 10px;
+        }
+        .form-floating {
+            margin-top: 10px;
+        }
+        .form-control {
+            padding-top: 5px;
+        }
+
+    </style>
+    <script>
+
+    </script>
+</head>
+<body>
+    <div class="login">
+        <h1> 로그인 하기</h1>
+        <div class="form-floating mb-3">
+            <label for="floatingInput"></label>
+            <input type="email" class="form-control" id="floatingInput" placeholder="아이디를 입력하세요.">
+        </div>
+        <div class="form-floating">
+            <label for="floatingPassword"></label>
+            <input type="password" class="form-control" id="floatingPassword" placeholder="비밀번호를 입력하세요.">
+        </div>
+    </div>
+    <div class="btn">
+        <button onclick="login_btn()" > 로그인 </button>
+        <button type="button" onclick="window.location.href='/sgin.html'"> 회원가입 </button>
+    </div>
+</body>
+</html>
