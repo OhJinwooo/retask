@@ -19,6 +19,14 @@ app.use("/api", [postRouter]);
 
 
 app.get("/", (req, res) => {
+    res.sendFile(__dirname + "/static/login.html");
+});
+
+app.get("/sgin", (req, res) => {
+    res.sendFile(__dirname + "/static/sgin.html");
+});
+
+app.get("/list", (req, res) => {
     res.sendFile(__dirname + "/static/list.html");
 });
 
