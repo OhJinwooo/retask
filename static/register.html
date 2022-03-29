@@ -63,26 +63,6 @@
               </div>
             </div>
             <div class="form-group row">
-              <label for="inputid" class="col-sm-4 col-form-label"
-                >아이디</label
-              >
-              <div class="col-sm-8">
-                <div class="input-group">
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="inputid"
-                    placeholder="ID"
-                  />
-                  <!--                                    <div class="input-group-append">-->
-                  <!--                                        <button class="btn btn-outline-sparta" type="button">중복확인</button>-->
-                  <!--                                    </div>-->
-                </div>
-
-                <!--                                <small id="emailHelp" class="form-text text-muted">입력 후 중복확인 버튼을 클릭해주세요.</small>-->
-              </div>
-            </div>
-            <div class="form-group row">
               <label for="inputPassword1" class="col-sm-4 col-form-label"
                 >비밀번호</label
               >
@@ -191,10 +171,28 @@
     <script>
       function sign_up() {
         const nickname = $("#inputNickname").val();
-        const id = $("#inputid").val();
         const password1 = $("#inputPassword1").val();
         const password2 = $("#inputPassword2").val();
         console.log(password1, password2)
+
+        const idd =  /^[a-z0-9]{3}/i;
+        const pww =  /^[a-z0-9]{4,90}$/i; // i가 들어가면 대소문자 구분을 안함.
+
+        if(!idd.test(nickname)) {
+          alert('아이디 형식이 올바르지않습니다.')
+          return;
+        }
+
+        if(!pww.test(password1)) {
+          alert('비밀번호 형식이 올바르지않습니다.')
+          return;
+        }
+
+        if(password1.includes(nickname)) {
+          alert('닉네임과 같은 값이 포함되어있습니다.')
+          return;
+        }
+
 
         $.ajax({
           type: "POST",
@@ -202,7 +200,6 @@
           contentType: "application/json",
           data: JSON.stringify({
             nickname: nickname,
-            id: id,
             password: password1,
             confirmPassword: password2,
           }),
@@ -223,6 +220,7 @@
           $("#alertModal .btn-confirm").click(confirmCallback);
         }
       }
+
     </script>
   </body>
 </html>

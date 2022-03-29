@@ -21,7 +21,7 @@
       href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
       rel="stylesheet"
     />
-    <title>스파르타 쇼핑몰 | 로그인</title>
+    <title>공지사항 ㅣ 로그인</title>
 
     <style>
       .jumbotron {
@@ -44,7 +44,7 @@
       class="jumbotron bg-sparta text-white text-center"
       onclick="window.location.href='/'"
     >
-      <h1 class="font-weight-bold">스파르타 쇼핑몰</h1>
+      <h1 class="font-weight-bold" onclick="window.location.href='/list.html'">공지사항 바로가기</h1>
     </div>
     <div class="wrap">
       <div class="card mx-auto" style="max-width: 480px">
@@ -58,7 +58,7 @@
             <input
               type="text"
               class="form-control"
-              placeholder="아이디"
+              placeholder="닉네임"
               aria-label="Username"
               aria-describedby="basic-addon1"
               id="inputid"
@@ -93,7 +93,7 @@
               <button
                 type="button"
                 class="btn btn-outline-sparta btn-block"
-                onclick="window.location.href='/register.html'"
+                onclick="window.location.href='/register'"
               >
                 회원가입
               </button>
@@ -159,26 +159,28 @@
     <script src="/api.js"></script>
 
     <script>
-      if (localStorage.getItem("token")) {
-        getSelf(function () {
-          alert("이미 로그인이 되어있습니다. 상품 페이지로 이동합니다.");
-          window.location.replace("/goods.html");
-        });
-      }
+      // if (localStorage.getItem("token")) {
+      //   getSelf(function () {
+      //     alert("이미 로그인이 되어있습니다. 상품 페이지로 이동합니다.");
+      //     window.location.replace("/list.html");
+      //   });
+      // }
 
       function sign_in() {
-        let id = $("#inputid").val();
+        let nickname = $("#inputid").val();
         let password = $("#inputPassword").val();
+        console.log(nickname,password)
         $.ajax({
           type: "POST",
           url: "/api/auth",
-          data: {
-            id: id,
+          contentType: "application/json",
+          data: JSON.stringify({
+            nickname: nickname,
             password: password,
-          },
+          }),
           success: function (response) {
             localStorage.setItem("token", response.token);
-            window.location.replace("/goods.html");
+            window.location.replace("/list");
           },
           error: function (error) {
             customAlert(error.responseJSON.errorMessage);
@@ -190,6 +192,8 @@
         $("#alertText").text(text);
         $("#alertModal").modal("show");
       }
+
+      
     </script>
   </body>
 </html>

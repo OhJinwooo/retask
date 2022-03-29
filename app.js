@@ -22,10 +22,12 @@ app.use("/api", [postRouter]);
 
 
 app.get("/", (req, res) => {
-    res.send();
+    res.sendFile(__dirname + "/static/index.html");
 });
 
-
+app.get("/register", (req, res) => {
+    res.sendFile(__dirname + "/static/register.html");
+});
 
 app.get("/list", (req, res) => {
     res.sendFile(__dirname + "/static/list.html");
