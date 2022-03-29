@@ -282,3 +282,9 @@ a {
     border: 0;
     resize: vertical;
 }
+
+.logout {
+    margin: 20px 0px 0px auto;    
+    width: 100%;
+
+}
