@@ -69,20 +69,16 @@ router.post("/auth", async (req, res) => {
 
 
 
-
-//view.html 상세 조회 페이지
 router.get("/post", async (req, res) => {
     const post = await Post.find();
-    res.json({
-        post,
-    });
+    res.json({ post });
 });
 
-//Id값 가져와서 상세조회하기
-router.get("/post/:postId", async (req, res) => {
-    const { postId } = req.params;
-
-    const [ view ] = await Post.findById({ postId: Number(postId) });
+// Id값 가져와서 상세조회하기
+router.get("/post/:postid", async (req, res) => {
+    const { postid } = req.params;
+    console.log(postid)
+    const [ view ] = await Post.find({postid: postid}).exec();
     res.json({
         view,
     });
@@ -94,10 +90,8 @@ router.post("/post/write", async (req, res) => {
     const date = today.toLocaleString();
     const { title, writer, description, pw } = req.body;
     console.log(req.body)
-    let hash = CryptoJS.SHA256(date);
-    const postId = hash["words"][0];
 
-    const createdPosts = await Post.create({ postId, writer,  title, description, pw, date, });
+    const createdPosts = await Post.create({ writer,  title, description, pw, date, });
     res.json({ post: createdPosts });
 });
 
