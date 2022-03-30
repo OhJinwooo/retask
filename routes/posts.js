@@ -3,10 +3,10 @@ const express = require("express");
 const connect = require("../schemas")
 const Post = require("../schemas/post");
 const User = require("../schemas/user");
+const Comment = require("../schemas/comment")
 const router = express.Router();
-const CryptoJS = require("crypto-js");
 const Jwt = require('jsonwebtoken')
-// const authMiddleware = require("../middleswares/auth-middleware")
+const authMiddleware = require("../middleswares/auth-middleware")
 
 
 connect();
@@ -66,22 +66,19 @@ router.post("/auth", async (req, res) => {
 
 });
 
+router.get("/users/me", authMiddleware, async (req, res) => {
+    console.log(res.locals);
+    const { user } = res.locals;
+      res.send({
+          user,
+      });
+});
 
 
 
 router.get("/post", async (req, res) => {
     const post = await Post.find();
     res.json({ post });
-});
-
-// Id값 가져와서 상세조회하기
-router.get("/post/:postid", async (req, res) => {
-    const { postid } = req.params;
-    console.log(postid)
-    const [ view ] = await Post.find({postid: postid}).exec();
-    res.json({
-        view,
-    });
 });
 
 //write.html 게시글 작성
@@ -94,6 +91,44 @@ router.post("/post/write", async (req, res) => {
     const createdPosts = await Post.create({ writer,  title, description, pw, date, });
     res.json({ post: createdPosts });
 });
+
+
+// Id값 가져와서 상세조회하기
+router.get("/post/:postid", async (req, res) => {
+    const { postid } = req.params;
+    console.log(postid)
+    const [ view ] = await Post.find({_id: postid}).exec();
+    // const comment  = await Comment.find({})
+    res.json({
+        view,
+    });
+    console.log(view)
+});
+
+//comment 작성 POST
+router.post("/posts/:postid", authMiddleware, async (req, res) => {
+    const { postid } = req.params;
+    // const userId = res.locals.user._id;
+    console.log(res.locals.user)
+    const { comment } = req.body;
+    const createcomments = await Comment.create({ comment, postid })
+    res.json({ msg: '등록완료' })
+})
+
+//comment 작성 GET
+// router.get("/posts/:commentid", async (req, res) => {
+//     const { commentid } = req.params;
+//     const { comment } = req.body
+//     console.log(commentid)
+//     const [ commentId ] = await Comment.find({commentid: commentid}).exec();
+//     const [ comments ] = await Comment.find({ comment })
+//     res.json({
+//         commentId,
+//         comments,
+//     })
+// });
+
+
 
 
 module.exports = router;

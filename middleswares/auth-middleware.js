@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const User = require("../models/user");
+const User = require("../schemas/user");
 
 
 //HTTP`Authorization: Bearer JWT토큰내용`
