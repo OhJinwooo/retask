@@ -5,7 +5,7 @@ const Post = require("../schemas/post");
 const User = require("../schemas/user");
 const Comment = require("../schemas/comment")
 const router = express.Router();
-const Jwt = require('jsonwebtoken')
+const Jwt = require('jsonwebtoken')//jwt (소문자로..)
 const authMiddleware = require("../middleswares/auth-middleware")
 
 
@@ -58,8 +58,8 @@ router.post("/auth", async (req, res) => {
             errorMessage: '닉네임 또는 패스워드를 확인해주세요.'
         })
         return;
-    }
-    const token = Jwt.sign({ userid: user.userId}, "m-s-k-j-w");
+    }//jwt (소문자로..)
+    const token = Jwt.sign({ userid: user.userId}, "m-s-k-j-w"); //userId 대문자로..
     res.send({
         token,
     })

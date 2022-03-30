@@ -30,6 +30,41 @@
         view_up();
         });
 
+        
+
+    // 유저일 경우 아닐 경우 유저아이디 확인    
+    //     $(document).ready(function () {
+    //         view_up();
+
+    //         if (!localStorage.getItem("token")) {
+    //             show_comments();
+    //             return;
+    //         } else {
+    //             getSelf(function (user) {
+    //                 userId = user.userId;
+    //                 show_comments(userId);
+    //                 return;
+    //         })          
+    //     }
+    // });
+
+
+
+    // 유저 아이디 값 가져오기 위한 함수
+    // function getSelf(callback) {
+    //     $.ajax({
+    //         type: "GET",
+    //         url: "/api/users/me",
+    //         headers: {
+    //         authorization: `Bearer ${localStorage.getItem("token")}`,
+    //         },
+    //         success: function (response) {
+    //             callback(response.user);
+    //         },
+    //     });
+    // };
+
+
         function view_up() {
             $.ajax({
                 type: "GET",
