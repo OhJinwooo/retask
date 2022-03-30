@@ -25,13 +25,14 @@ app.get("/", (req, res) => {
     res.sendFile(__dirname + "/static/index.html");
 });
 
+app.get("/login", (req, res) => {
+    res.sendFile(__dirname + "/static/login.html");
+});
+
 app.get("/register", (req, res) => {
     res.sendFile(__dirname + "/static/register.html");
 });
 
-app.get("/list", (req, res) => {
-    res.sendFile(__dirname + "/static/list.html");
-});
 
 app.get("/write", (req, res) => {
     res.sendFile(__dirname + "/static/write.html");

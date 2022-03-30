@@ -5,7 +5,7 @@ const Post = require("../schemas/post");
 const User = require("../schemas/user");
 const Comment = require("../schemas/comment")
 const router = express.Router();
-const Jwt = require('jsonwebtoken')
+const jwt = require('jsonwebtoken')
 const authMiddleware = require("../middleswares/auth-middleware")
 
 
@@ -59,20 +59,19 @@ router.post("/auth", async (req, res) => {
         })
         return;
     }
-    const token = Jwt.sign({ userid: user.userId}, "m-s-k-j-w");
+    const token = jwt.sign({ userId: user.userId }, "m-s-k-j-w");//페이코드?
     res.send({
         token,
     })
-
 });
 
-router.get("/users/me", authMiddleware, async (req, res) => {
-    console.log(res.locals);
+router.get("/users/me", async (req, res) => {
+    console.log(res.locals)
     const { user } = res.locals;
-      res.send({
-          user,
-      });
-});
+    res.send({
+      user,
+    });
+  })
 
 
 
@@ -96,37 +95,35 @@ router.post("/post/write", async (req, res) => {
 // Id값 가져와서 상세조회하기
 router.get("/post/:postid", async (req, res) => {
     const { postid } = req.params;
-    console.log(postid)
-    const [ view ] = await Post.find({_id: postid}).exec();
-    // const comment  = await Comment.find({})
+    const [ view ] = await Post.find({ _id: postid }).exec();
+    const comment  = await Comment.find({})
     res.json({
         view,
+        comment,
     });
-    console.log(view)
 });
 
 //comment 작성 POST
 router.post("/posts/:postid", authMiddleware, async (req, res) => {
     const { postid } = req.params;
-    // const userId = res.locals.user._id;
-    console.log(res.locals.user)
+    const userId = res.locals.user._id;
+    const nickname = res.locals.user.nickname
+    console.log(nickname)
     const { comment } = req.body;
-    const createcomments = await Comment.create({ comment, postid })
+    await Comment.create({ comment, postid , userId, nickname })
     res.json({ msg: '등록완료' })
 })
 
-//comment 작성 GET
-// router.get("/posts/:commentid", async (req, res) => {
-//     const { commentid } = req.params;
-//     const { comment } = req.body
-//     console.log(commentid)
-//     const [ commentId ] = await Comment.find({commentid: commentid}).exec();
-//     const [ comments ] = await Comment.find({ comment })
-//     res.json({
-//         commentId,
-//         comments,
-//     })
-// });
+//comment 삭제 DELETE
+router.delete("/posts/:postid", authMiddleware, async (req, res) => {
+    const { commentid } = req.params
+    const comment = await Comment.findById({commentid}).exec();
+    await Comment.delete();
+    console.log(comment)
+
+});
+
+
 
 
 
