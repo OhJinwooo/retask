@@ -17,6 +17,7 @@ router.get("/", (req, res) => {
     res.send('list page')
 });
 
+
 //회원가입
 router.post("/users", async (req, res) => {
     const { nickname, password, confirmPassword } = req.body;
@@ -44,6 +45,7 @@ router.post("/users", async (req, res) => {
     res.status(201).send({})//응답값을 줄 필요가 없다. 프론트엔드에서 회원 가입을 하고 나서 API가 주는 응답값으로 뭔가 하는게 아무것도 없다
 })
 
+
 //로그인
 //auth(authentication): 로그인 한다는 행위가 내 권한을 인증한다는 행위로 빗대어 하는게 보통의 관례 JWT토큰
 //POST메서드를 사용하는 이유는 토큰을 그때 그때 생성을 하기 때문에 또 다른 장점은 GET같은 메서드는 바디에 실을 수 없고 다른곳에 해야되는데 그럼 주소에 다 노출이 된다 
@@ -65,6 +67,7 @@ router.post("/auth", async (req, res) => {
     })
 });
 
+
 router.get("/users/me", async (req, res) => {
     console.log(res.locals)
     const { user } = res.locals;
@@ -79,6 +82,7 @@ router.get("/post", async (req, res) => {
     const post = await Post.find();
     res.json({ post });
 });
+
 
 //write.html 게시글 작성
 router.post("/post/write", async (req, res) => {
@@ -103,23 +107,54 @@ router.get("/post/:postid", async (req, res) => {
     });
 });
 
+
+//회원 조회
+router.get("/postlogin/:postid", authMiddleware, async (req, res) => {
+    const { postid } = req.params;
+    const userId = res.locals.user._id;
+    const [ view ] = await Post.find({ _id: postid }).exec();
+    const comment  = await Comment.find({})
+    res.json({
+        view,
+        comment,
+        userId
+    });
+});
+
+
 //comment 작성 POST
 router.post("/posts/:postid", authMiddleware, async (req, res) => {
     const { postid } = req.params;
     const userId = res.locals.user._id;
     const nickname = res.locals.user.nickname
-    console.log(nickname)
+    // console.log(nickname)
     const { comment } = req.body;
+    if(!comment.length) {
+        res.status(400).send({
+            errorMessage: '댓글 내용을 입력해주세요.'
+        })
+        return;
+    }
+    
     await Comment.create({ comment, postid , userId, nickname })
     res.json({ msg: '등록완료' })
 })
 
-//comment 삭제 DELETE
-router.delete("/posts/:postid", authMiddleware, async (req, res) => {
-    const { commentid } = req.params
-    const comment = await Comment.findById({commentid}).exec();
-    await Comment.delete();
-    console.log(comment)
+
+// comment 삭제 DELETE
+router.delete("/postss/:postid", async (req, res) => {
+    const { id } = req.body;
+    // console.log(id)
+    const comment = await Comment.findById({_id: id}).exec();
+    // console.log(comment)
+    await Comment.deleteOne({_id: id});
+    res.send({})
+
+}); 
+
+
+//comment 수정 patch
+router.patch("/posts/:commentid", (req, res) => {
 
 });
 

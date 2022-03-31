@@ -165,6 +165,12 @@
       //     window.location.replace("/list.html");
       //   });
       // }
+      $(document).ready(function () {
+        if(localStorage.getItem("token")){
+            alert('이미 로그인 상태입니다.')
+            window.location.href="/"
+        }
+        });
 
       function sign_in() {
         let nickname = $("#inputid").val();

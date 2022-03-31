@@ -18,19 +18,24 @@
       crossorigin="anonymous"
     ></script>
     <script>
-        const quaryString = window.location.search;
+        const quaryString = window.location.search;// 전체 URL중 쿼리스트링(파라미터)만 반환
         console.log(quaryString)
-        const urlParams = new URLSearchParams(quaryString)
+        const urlParams = new URLSearchParams(quaryString)// URL의 파라미터를 다룰 수 있는 객체인 URLSearchParams객체로 변환
         console.log(urlParams)
-        const postid = urlParams.get("postid");
+        const postid = urlParams.get("postid");// URL의 쿼리스트링에서 '파라미터명'으로 조회된 첫번째 값을 리턴
         console.log(postid)
         
 
 
         $(document).ready(function () {
-        view_up();
+        if(localStorage.getItem("token")){
+            view_login();
+        }else {
+            view_up();
+        }
         });
 
+        //비로그인 화면 가져오기
         function view_up() {
             $.ajax({
                 type: "GET",
@@ -72,7 +77,7 @@
                         for(let i=row.length-1; i >=0 ; i--) {
                             if(postid === row[i]['postid']) {
                             temp_html2 += `<h4><span class="badge bg-secondary">${row[i]['nickname']}</span> ${row[i]['comment']}
-                                <button class="fa fa-times" aria-hidden="true" onclick="deleteComment()"></button></h4>`
+                                `
                             }
                         }     
                         console.log(temp_html2)        
@@ -83,8 +88,75 @@
                 },
             )
         }
+        //로그인 화면 GET
+        function view_login() {
+            $.ajax({
+                type: "GET",
+                url: `/api/postlogin/${postid}`,
+                headers: {
+                    authorization: `Bearer ${localStorage.getItem("token")}`,
+                    },
+                data: {},
+                success: function (response) {
+                    // console.log(response['userId'])
+                    let rows = response['view']
+                    let row = response['comment']
+                    let user = response['userId']
+                        let title = rows['title']
+                        let writer = rows['writer']
+                        let date = rows['date']
+                        let description = rows['description']
+                        // console.log(commentid)
+                        // let comment = row[i]['_id']
 
+                        let temp_html = `<div class="board_view">
+                                            <div class="title">
+                                                ${title}
+                                            </div>
+                                            <div class="info">
+                                                <dl>
+                                                    <dt>글쓴이</dt>
+                                                    <dd class="writer">${writer}</dd>
+                                                </dl>
+                                                <dl>
+                                                    <dt>작성일</dt>
+                                                    <dd class="date">${date}</dd>
+                                                </dl>
+                                            </div>
+                                            <div class="cont">
+                                                ${description}<br class="description">
+                                            </div>
+                                        </div>`
+                                        
+                        $('#view-box').append(temp_html);
+                        // console.log(postid) 
+                        
+                        let temp_html2 = ``
+                        for(let i=row.length-1; i >=0 ; i--) {
+                            if(postid === row[i]['postid']) {
+                            temp_html2 += `<h4><span class="badge bg-secondary">${row[i]['nickname']}</span> ${row[i]['comment']}
+                                `
+                                if(user === row[i]['userId']){
+                                temp_html2 += `<button class="fa fa-pencil" aria-hidden="true" onclick="modifyCommentShow()"></button>
+                                                <button class="fa fa-times" aria-hidden="true" onclick="deleteComment('${row[i]['_id']}')"></button>`
+                            }
+                            }
+                            
+                        }     
+                        // console.log(temp_html2)        
+                        $('#comment-box').append(temp_html2);         
+
+                        
+                    }
+                },
+            )
+        }
+
+        //코멘트 POST
         function comment() {
+            if(!localStorage.getItem('token')) {
+                window.location.href = "/login";
+            }
             let comment = $('#comment').val()
                 $.ajax({
                     type: 'POST',
@@ -100,33 +172,42 @@
                         alert("등록 완료")
                         location.href=`/view.html?postid=${postid}`
                     },
-                    error: function (xhr, status, error) {
-                    if (status == 401) {
-                    alert("로그인이 필요합니다.");
-                    }else {
-                        localStorage.clear();
-                        alert("로그인이 필요합니다.");
-                    }
-                    window.location.href = "/login";
+                    error: function (request, status) {
+                        alert(request.responseText)
+                    // if (status == 401) {
+                    // alert("로그인이 필요합니다.");
+                    // }
+                    // else {
+                    //     localStorage.clear();
+                    //     alert("로그인이 필요합니다.");
+                    // }
+                    // window.location.href = "/login";
                 },
                 });
             }
-            function deleteComment() {
-            let comment = $('#comment').val()
+            //comment 삭제 AJAX
+            function deleteComment(I) {
+                let id = I;
+                console.log(id)
                 $.ajax({
                     type: 'DELETE',
-                    url: `/api/posts/${postid}`,
+                    url: `/api/postss/${postid}`,
                     headers: {
                     authorization: `Bearer ${localStorage.getItem("token")}`,
-                },
+                    },
                     contentType: "application/json",
-                    data: JSON.stringify({ }),
-                    success: function (res) {
+                    data: JSON.stringify({
+                        id,
+                    }),
+
+                    success: function () {
                         alert("삭제완료")
                         location.href=`/view.html?postid=${postid}`
                     },
                 });
             }
+
+            //comment 수정 AJAX
 
         // function getSelf(callback) {
         //     $.ajax({
@@ -169,9 +250,9 @@
         </div>
         <div class="comment_box">
             <div id="comment-box">
-                <h4><span class="badge bg-secondary">New</span> Example heading </h4>
+                <!-- <h4><span class="badge bg-secondary">New</span> Example heading </h4>
                 <button class="fa fa-pencil" aria-hidden="true" onclick="modifyCommentShow()"></button>
-                <button class="fa fa-times" aria-hidden="true" onclick="deleteComment()"></button>
+                <button class="fa fa-times" aria-hidden="true" onclick="deleteComment()"></button> -->
             </div>
         </div>
         <div class="form-floating">
