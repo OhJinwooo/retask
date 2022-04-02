@@ -33,7 +33,6 @@ app.get("/register", (req, res) => {
     res.sendFile(__dirname + "/static/register.html");
 });
 
-
 app.get("/write", (req, res) => {
     res.sendFile(__dirname + "/static/write.html");
 });

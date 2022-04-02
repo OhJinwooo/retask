@@ -77,7 +77,7 @@ router.get("/users/me", async (req, res) => {
   })
 
 
-
+//list목록 조회
 router.get("/post", async (req, res) => {
     const post = await Post.find();//Post안에 모든 값을 찾아와 변수 post에 넣어준다
     res.json({ post });//json 형태로 post의 값을 받아온다
@@ -87,7 +87,7 @@ router.get("/post", async (req, res) => {
 //write.html 게시글 작성
 router.post("/post/write", async (req, res) => {
     const today = new Date(); // new Date 현재 시간
-    const date = today.toLocaleString();//현재 시간을 문자열로 바꿔  변수date에 넣어준다
+    const date = today.toLocaleString();//현재 시간을 문자열로 바꿔  변수date에 넣어준다 //toLocaleString
     const { title, writer, description, pw } = req.body; //작성된 바디의 값들을
     console.log(req.body)
 
