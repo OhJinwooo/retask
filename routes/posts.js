@@ -69,8 +69,9 @@ router.post("/auth", async (req, res) => {
 
 
 router.get("/users/me", async (req, res) => {
-    console.log(res.locals)
+    // console.log(res.locals)
     const { user } = res.locals;//변수user에 res.locals를 할당해준다
+    // console.log(locals)
     res.send({//응답값 user
       user,
     });
@@ -89,7 +90,7 @@ router.post("/post/write", async (req, res) => {
     const today = new Date(); // new Date 현재 시간
     const date = today.toLocaleString();//현재 시간을 문자열로 바꿔  변수date에 넣어준다 //toLocaleString
     const { title, writer, description, pw } = req.body; //작성된 바디의 값들을
-    console.log(req.body)
+    // console.log(req.body)
 
     const createdPosts = await Post.create({ writer,  title, description, pw, date, });//Post라는 컬렉션에 create만들어준다.
     res.json({ post: createdPosts });//json이라는 형태로 변수createdPosts를 post에 넣어서 받아온다
@@ -100,6 +101,7 @@ router.post("/post/write", async (req, res) => {
 router.get("/post/:postid", async (req, res) => {
     const { postid } = req.params;//user주소 뒤에 파라미터값을 변수 postid에 넣어준다
     const [ view ] = await Post.find({ _id: postid }).exec();//Post컬렉션 안에 _id 값을 찾아와 view배열 안에 넣어준다
+    console.log(view)
     const comment  = await Comment.find({})//Comment컬렉션의 모든 값을 찾아와 변수 comment에 넣어주고
     res.json({//json형태로 찾아와 프론트에서 사용할 수 있게 보내준다.
         view,
@@ -114,6 +116,7 @@ router.get("/postlogin/:postid", authMiddleware, async (req, res) => {
     const userId = res.locals.user._id;//locals.user안에 저장되있는_id의 값을 변수 userId에 넣어준다
     const [ view ] = await Post.find({ _id: postid }).exec();
     const comment  = await Comment.find({})
+    
     res.json({
         view,
         comment,
