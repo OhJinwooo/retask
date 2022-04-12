@@ -22,6 +22,7 @@ module.exports = (req, res, next) => {
 
         User.findById(userId).exec().then((user) => { // promise then함수 알아보기
             res.locals.user = user;//locals 강의자료 확인 (2-7) locals안에 사용자 정보가 들어있을 때에는 인증이 된 상태로 저장이 되기 때문에 믿고 사용해도 된다.
+            // console.log(res.locals.user)
             //사용자 인증 미들웨어를 앞에다가 붙이지 않았을 경우 app.js (authMiddleware) 문제가 발생, 인증을 거치지 않고는 들어가지 않는다 위에 코드가 그렇게 설정 해놨다.
             next(); // 왜 async함수를 사용하지 못할까?
         });
